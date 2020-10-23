@@ -1,33 +1,18 @@
-class PigLatinizer
-  attr_reader :text
-  
-  def initialize(text)
-    @text = text.downcase
-  end
-  
-  def piglatinize
-    a = @text.split(" ")
-    b = a.map {|word| converter(word)}
-    b.join(" ")
-  end
-  
-  def converter(word)
-    consonant = ["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z"]
-    vowel = ["a","e","i","o","u"]
-    first_letter = word[0].downcase
-    if ["a", "e", "i", "o", "u"].include?(first_letter)
-        "#{word}way"
-    else
-      consonants = []
-      consonants << word[0]
-        if ["a", "e", "i", "o", "u"].include?(word[1]) == false
-          consonants << word[1]
-          if ["a", "e", "i", "o", "u"].include?(word[2]) == false
-            consonants << word[2]
-          end
-        end
-      "#{word[consonants.length..-1] + consonants.join + "ay"}"
-    end
-  end
-  
-end
+class PigLatinizer 
+    def piglatinize(sentence)
+        words = sentence.split(" ")
+        new_sentence = []
+        words.each do |word|
+            if word[0].scan(/[aeoui]/i).empty? && word[1].scan(/[aeoui]/i).empty? && word[2].scan(/[aeoui]/i).empty?
+                new_sentence << "#{word[3..-1]}#{word[0]}#{word[1]}#{word[2]}ay"
+            elsif word[0].scan(/[aeoui]/i).empty? && word[1].scan(/[aeoui]/i).empty?
+                new_sentence << "#{word[2..-1]}#{word[0]}#{word[1]}ay"
+            elsif word[0].scan(/[aeoui]/i).empty?
+                new_sentence << "#{word[1..-1]}#{word[0]}ay"
+            else 
+                new_sentence << "#{word}way"
+            end 
+        end 
+        new_sentence.join(" ")
+    end 
+end 
